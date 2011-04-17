@@ -1,0 +1,3 @@
+cache/*
+config.yml
+log/*.log
