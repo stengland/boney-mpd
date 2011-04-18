@@ -7,20 +7,17 @@ class Playlist extends Tracklist
   url: '/playlist'
 
 class Search extends Tracklist
-  url: (query, type = 'title') ->
-    "/search/#{type}/#{query}"
+  url: ->
+    "/search/#{@type}/#{@query}"
 
 class TracklistView extends Backbone.View
   tagName: 'ul'
   className: 'tracklist'
-  initialize: ->
-    super
-    _.bindAll(this, 'addOne')
-  addOne: (track) ->
+  addOne: (track) =>
     trackView = new TrackView(model: track)
-    $(@el).html(trackView.render().el)
+    $(@el).append(trackView.render().el)
   render: =>
-    $(@el).html('test')
+    $(@el).html('')
     @collection.each(@addOne)
     this
 
@@ -30,33 +27,64 @@ class TrackView extends Backbone.View
     <%= track.get('title') %>
     <%= track.get('artist') %>
     <%= track.get('album') %>
+    <button class="add">Add</button>
   ''')
+  events:
+    'click .add' : 'addToPlayList'
+  addToPlayList: =>
+    playlist.create(@model) #posts the model to the playlist
   render: =>
-    alert "render track #{@model.get('title')}"
     $(@el).html(@template(track: @model))
     this
 
-class PlayerView extends Backbone.View
-  initialize: ->
-    @el = $('#player')
-    @render()
-  render: =>
-    playlistView = new TracklistView({ id: 'playlist', collection: playlist })
-    $(@el).append(playlistView.render().el)
-    this
 
 playlist = new Playlist
+class PlaylistView extends Backbone.View
+  initialize: ->
+    @tracklistView = new TracklistView({ collection: playlist })
+    super
+  render: =>
+    $(@el).append(@tracklistView.render().el)
+    this
+
+search = new Search
+class SearchView extends Backbone.View
+  initialize: ->
+    @tracklistView = new TracklistView({ collection: search })
+    super
+  events:
+    "change #query":          "search"
+  search: ->
+    window.location.hash = "search/title/#{$('#query').val()}"
+  render: =>
+    $(@el).append(@tracklistView.render().el)
+    this
 
 class PlayerController extends Backbone.Controller
   routes:
-    'current' : 'current'
+    'playlist'            : 'playlist',
+    'search/:type/:query' : 'search'
 
-  current: ->
-    alert 'Hello'
+  playlist: ->
+    playlist.fetch({
+      success: (playlist, response) ->
+        playlistView.render()
+    })
+
+  search: (type, query) ->
+    search.type = type
+    search.query = query
+    search.fetch({
+      success: ->
+        searchView.render()
+    })
+
+playlistView = null
+searchView = null
 
 $ ->
-  playlist.fetch({
-    success: (playlist, response) ->
-      playerView = new PlayerView
-  })
+  playlistView = new PlaylistView({ el: $('#playlist') })
+  searchView = new SearchView({ el: $('#search') })
+  new PlayerController()
+  Backbone.history.start()
 
