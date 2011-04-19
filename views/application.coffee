@@ -10,6 +10,15 @@ class Search extends Tracklist
   url: ->
     "/search/#{@type}/#{@query}"
 
+class PlayerView extends Backbone.View
+  events:
+    'click .play'  : 'play'
+    'click .pause' : 'pause'
+  play: ->
+    $.get('/play')
+  pause: ->
+    $.get('/pause')
+
 class TracklistView extends Backbone.View
   tagName: 'ul'
   className: 'tracklist'
@@ -83,6 +92,7 @@ playlistView = null
 searchView = null
 
 $ ->
+  playerView = new PlayerView({ el: $('#player')} )
   playlistView = new PlaylistView({ el: $('#playlist') })
   searchView = new SearchView({ el: $('#search') })
   new PlayerController()

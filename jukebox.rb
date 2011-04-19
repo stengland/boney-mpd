@@ -18,6 +18,14 @@ class MeatBox < Sinatra::Base
     File.read(File.join('public', 'index.html'))
   end
 
+  get '/play' do
+    @@mpd.play
+  end
+
+  get '/pause' do
+    @@mpd.pause
+  end
+
   get "/search/title/:query" do
     content_type "application/json"
     @@mpd.search('title',params[:query]).to_json
