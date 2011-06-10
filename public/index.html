@@ -3,15 +3,15 @@
     <head>
       <title>Meatify</title>
 
-        <meta charset="utf-8">
+        <meta charset="utf-8"/>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
-        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css"/>
+        <link rel="shortcut icon" href="favicon.ico"/>
 
-        <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-        <!--<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>-->
+        <script type="text/javascript" charset="utf-8" src="/zepto.min.js"></script>
         <script type="text/javascript" charset="utf-8" src="/underscore.js"></script>
         <script type="text/javascript" charset="utf-8" src="/backbone.js"></script>
 	<script type="text/javascript" charset="utf-8" src="/application.js"></script>
@@ -24,21 +24,26 @@
     <body>
       <header>
       <h1>Meatify</h1>
-      <section id="player">
-      <button class="play">Play</button>
-      <button class="pause">Pause</button>
-      </section>
+      <div id="player">
+      <button data-action="previous">Previous</button>
+      <button data-action="play">Play</button>
+      <button data-action="pause">Pause</button>
+      <button data-action="next">Next</button>
+      </div>
       <a href="#playlist">Playlist</a>
       <a href="#search">Search</a>
       </header>
 
       <section id="playlist">
-      <h2>Playist</h2>
+      <h2>Playlist</h2>
       </section>
 
       <section id="search">
       <h2>Search</h2>
       <input type="text" name="q" id="query"/>
+      </section>
+
+      <section id="browser">
       </section>
       <footer>
       </footer>
