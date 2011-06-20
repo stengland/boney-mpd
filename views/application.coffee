@@ -24,7 +24,12 @@ class Search extends Tracklist
 
 class PlayerView extends Backbone.View
   events:
-    'click button'  : 'action'
+    'click command'  : 'action'
+  render: =>
+    if @current_song
+      this.$('.track').html(@current_song.title)
+      this.$('.artist').html(@current_song.artist)
+      this.$('.album').html(@current_song.album)
   action: (e) ->
     $.get("/#{$(e.target).data('action')}")
 
@@ -160,5 +165,19 @@ $ ->
   searchView = new SearchView({ el: $('#search') })
   browserView = new BrowserView({ el: $('#browser')})
   new PlayerController()
+  connection = new WebSocket('ws://localhost:9292/messages')
+  # When the connection is open, send some data to the server
+  #connection.onopen = () ->
+    #connection.send('Ping'); # Send the message 'Ping' to the server
+  # Log errors`
+  connection.onerror = (error) ->
+    console.log('WebSocket Error ' + error)
+  # Log messages from the server
+  connection.onmessage = (e) ->
+    console.log('Server: ' + e.data)
+    parsed_data = eval(e.data)
+    playerView[parsed_data[0]] = parsed_data[1]
+    playerView.render()
+
   Backbone.history.start()
 

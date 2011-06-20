@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-    <head>
-      <title>Meatify</title>
+  <head>
+    <title>Meatify</title>
 
-        <meta charset="utf-8"/>
-        <meta name="keywords" content=""/>
-        <meta name="description" content=""/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="stylesheet" href="style.css"/>
-        <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
 
-        <script type="text/javascript" charset="utf-8" src="/zepto.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="/underscore.js"></script>
-        <script type="text/javascript" charset="utf-8" src="/backbone.js"></script>
-	<script type="text/javascript" charset="utf-8" src="/application.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/zepto.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/underscore.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/backbone.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/application.js"></script>
 
-        <!--[if IE]>
-          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-    </head>
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
 
-    <body>
-      <header>
-      <h1>Meatify</h1>
-      <div id="player">
-      <button data-action="previous">Previous</button>
-      <button data-action="play">Play</button>
-      <button data-action="pause">Pause</button>
-      <button data-action="next">Next</button>
-      </div>
-      <a href="#playlist">Playlist</a>
-      <a href="#search">Search</a>
-      </header>
+  <body>
+    <header>
+    <h1>Meatify</h1>
+    <menu id="player">
+      <command id="prev" data-action="previous">
+      <command id="play" data-action="play">
+      <command id="next" data-action="next">
+      <input type="range"  min="0" max="100" id="volume" />
+      <details open="true">
+        <dl>
+          <dt>Track</dt>
+          <dd class="track">-</dd>
+          <dt>Artist</dt>
+          <dd class="artist">-</dd>
+          <dt>Album</dt>
+          <dd class="album">-</dd>
+        </dl>
+      </details>
+    </menu>
+    <nav>
+    <ul>
+      <li><a href="#playlist">Playlist</a></li>
+      <li><a href="#search">Search</a></li>
+    </ul>
+    </nav>
+    </header>
 
-      <section id="playlist">
-      <h2>Playlist</h2>
-      </section>
+    <section id="playlist">
+    <h2>Playlist</h2>
+    </section>
 
-      <section id="search">
-      <h2>Search</h2>
-      <input type="text" name="q" id="query"/>
-      </section>
+    <section id="search">
+    <h2>Search</h2>
+    <input type="text" name="q" id="query"/>
+    </section>
 
-      <section id="browser">
-      </section>
-      <footer>
-      </footer>
-    </body>
+    <section id="browser">
+    </section>
+    <footer>
+    </footer>
+  </body>
 </html>

@@ -4,16 +4,47 @@ class Mopidy < MPD
   end
 end
 
+class Sinatra::Request
+  include Skinny::Helpers
+end
+
 class MeatBox < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
 
+  class PlayerState
+    class << self
+      attr_accessor :sockets
+
+      def current_song(song)
+        send_message('current_song', song)
+      end
+
+      def send_message(*data)
+        puts "CALLBACK: #{data.inspect}"
+        @sockets.each do |soc|
+          puts "MESSAGE #{soc}"
+          soc.send_message data.to_json
+        end
+      end
+    end
+  end
+
   configure do
+    Compass.configuration do |config|
+      config.project_path = File.dirname(__FILE__)
+      config.sass_dir = 'views'
+    end
+
+    set :scss, Compass.sass_engine_options
+
+    PlayerState.sockets = []
+
     begin
-      # Load options from config.yml (can override above)
-      #set YAML.load_file('config.yml')fluffy clouds
       @@mpd = Mopidy.new 'localhost', 6600
-      @@mpd.connect
+      @@mpd.connect(true)
+
+      @@mpd.register_callback( PlayerState.method('current_song'), MPD::CURRENT_SONG_CALLBACK )
     rescue Errno::ECONNREFUSED => e
       puts "Could not connect to Mopidy: #{e}"
       exit
@@ -26,7 +57,7 @@ class MeatBox < Sinatra::Base
   end
 
   get '/style.css' do
-    content_type 'text/css; charset=utf-8'
+    content_type 'text/css', :charset => 'utf-8'
     scss :style
   end
 
@@ -67,6 +98,23 @@ class MeatBox < Sinatra::Base
 
   delete '/playlist/:id' do
     @@mpd.deleteid(%{"#{ params[:id] }"})
+  end
+
+  get '/messages' do
+    if request.websocket?
+      request.websocket!(
+        :protocol => "Meatbox Message Push",
+        :on_start => proc do |websocket|
+          puts "OPEN sock"
+          PlayerState.sockets << websocket
+          websocket.on_close do |websocket|
+            puts "CLOSE sock"
+            PlayerState.sockets.delete( websocket )
+          end
+        end)
+    else
+      ['Nothing to see here']
+    end
   end
 
 end

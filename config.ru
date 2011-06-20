@@ -1,5 +1,5 @@
 require 'rubygems'
 require 'bundler'
 Bundler.require
-require 'jukebox'
+require './jukebox'
 run MeatBox
