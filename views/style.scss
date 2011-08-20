@@ -11,8 +11,8 @@ body {
   @include background-image(linear-gradient(#777, #666 47%,#555 53%,#444));
   border: 1px solid #bbb {
     bottom: 1px solid #999;
-  }
-  @include single-box-shadow;
+}
+@include single-box-shadow;
 }
 #player command {
   float:left;
@@ -40,15 +40,15 @@ body {
     top: 5px;
     text-indent: 5px;
     @include ellipsis;
+}
+dd {
+  top: 20px;
+}
+@for $i from 1 through 4 {
+  dt:nth-of-type(#{$i}), dd:nth-of-type(#{$i}){
+    left: ( $i - 1 ) * 33.3%;
   }
-  dd {
-    top: 20px;
-  }
-  @for $i from 1 through 4 {
-    dt:nth-of-type(#{$i}), dd:nth-of-type(#{$i}){
-      left: ( $i - 1 ) * 33.3%;
-    }
-  }
+}
 }
 
 
@@ -58,25 +58,25 @@ body {
 header {
   ul li {
     float: left;
-  }
 }
-ul {
+}
+ul, ol {
   @include border-radius(4px, 4px);
   overflow: hidden;
+  li {
+    @include ellipsis;
+    text-shadow: 0 1px 0 #eee;
+    color:#000;
+    background-color:#FFF;
+    line-height:30px;
+    border-bottom: 1px solid #ccc;
+    padding-left:10px;
+    cursor:pointer;
+    &:hover {
+      color:#FFFFFF;
+      @include background-image(linear-gradient(#eee,#ccc));
 }
-ul li {
-  @include ellipsis;
-  text-shadow: 0 1px 0 #eee;
-  color:#000;
-  background-color:#FFF;
-  line-height:30px;
-  border-bottom: 1px solid #ccc;
-  padding-left:10px;
-  cursor:pointer;
-  &:hover {
-    color:#FFFFFF;
-    @include background-image(linear-gradient(#eee,#ccc));
-  }
+}
 }
 section {
   position: absolute;
@@ -90,5 +90,5 @@ section {
   &:target, &:active, &.active {
     opacity: 1;
     z-index: 1;
-  }
+}
 }

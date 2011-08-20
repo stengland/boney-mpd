@@ -34,7 +34,7 @@ class PlayerView extends Backbone.View
     $.get("/#{$(e.target).data('action')}")
 
 class TracklistView extends Backbone.View
-  tagName: 'ul'
+  tagName: 'ol'
   className: 'tracklist'
   renderOne: (track) =>
     trackView = new TrackView(model: track)
