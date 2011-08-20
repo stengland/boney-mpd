@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'bundler'
+Bundler.require
+
 class Mopidy < MPD
   def pause
     send_command 'pause'
