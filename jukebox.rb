@@ -81,7 +81,7 @@ class MeatBox < Sinatra::Base
 
   get "/album/:title" do
     content_type "application/json"
-    @@mpd.find('album',params[:title]).sort{|a,b| a['track'].to_i <=> b['track'].to_i }.to_json
+    @@mpd.find('album',params[:title]).reject{|t| t['album'] != params[:title]}.sort{|a,b| a['track'].to_i <=> b['track'].to_i }.to_json
   end
 
   get '/playlist' do
