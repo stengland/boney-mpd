@@ -56,6 +56,9 @@ body {
 
 
 header {
+  ul li {
+    float: left;
+  }
 }
 ul {
   @include border-radius(4px, 4px);
@@ -77,8 +80,15 @@ ul li {
 }
 section {
   position: absolute;
-  top: 30%;
-  bottom: 5%;
-  width: 90%;
+  top: 100px;
+  bottom: 0px;
+  width: 100%;
+  @include transition(all 1.0s ease-in-out);
+  opacity: 0;
   overflow: auto;
+
+  &:target, &:active, &.active {
+    opacity: 1;
+    z-index: 1;
+  }
 }

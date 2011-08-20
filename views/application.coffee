@@ -58,7 +58,6 @@ class TrackView extends Backbone.View
   showArtist: ->
     window.location.hash = "artist/#{@model.get('artist')}"
   showAlbum: ->
-    $('#search').anim({ 'slideouttoleft' }, 2, 'ease-out')
     window.location.hash = "album/#{@model.get('album')}"
   playListAction: =>
     if @model.get('pos')
@@ -118,8 +117,8 @@ class SearchView extends Backbone.View
 
 class PlayerController extends Backbone.Controller
   routes:
-    'playlist'            : 'playlist',
-    'search' : 'search'
+    'playlist'            : 'playlist'
+    'search'              : 'search'
     'search/:type/:query' : 'search'
     'album/:title'        : 'album'
 
@@ -153,13 +152,11 @@ class PlayerController extends Backbone.Controller
 playlistView = null
 searchView = null
 browserView = null
-
 toggleSection = (section) ->
-  $('section').hide()
-  section.show() if section
+  $('section.active').removeClass('active')
+  $(section).addClass('active')
 
 $ ->
-  toggleSection()
   playerView = new PlayerView({ el: $('#player')} )
   playlistView = new PlaylistView({ el: $('#playlist') })
   searchView = new SearchView({ el: $('#search') })

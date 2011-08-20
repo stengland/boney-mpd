@@ -62,6 +62,7 @@ class MeatBox < Sinatra::Base
   end
 
   get '/' do
+    headers "Access-Control-Allow-Headers" => "x-requested-with"
     File.read(File.join('public', 'index.html'))
   end
 
@@ -80,7 +81,7 @@ class MeatBox < Sinatra::Base
 
   get "/album/:title" do
     content_type "application/json"
-    @@mpd.find('album',params[:title]).to_json
+    @@mpd.find('album',params[:title]).sort{|a,b| a['track'].to_i <=> b['track'].to_i }.to_json
   end
 
   get '/playlist' do
