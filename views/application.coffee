@@ -24,7 +24,7 @@ class Search extends Tracklist
 
 class PlayerView extends Backbone.View
   events:
-    'click command'  : 'action'
+    'click button'  : 'action'
   render: =>
     if @current_song
       this.$('.track').html(@current_song.title)
@@ -158,7 +158,7 @@ toggleSection = (section) ->
   $(section).addClass('active')
 
 $ ->
-  playerView = new PlayerView({ el: $('#player')} )
+  playerView = new PlayerView({ el: $('header')} )
   playlistView = new PlaylistView({ el: $('#playlist') })
   searchView = new SearchView({ el: $('#search') })
   browserView = new BrowserView({ el: $('#browser')})

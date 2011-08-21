@@ -6,56 +6,50 @@ body {
   font-family: Georgia, Times, serif;
 }
 
-#player {
+header {
   @include clearfix;
   @include background-image(linear-gradient(#777, #666 47%,#555 53%,#444));
-  border: 1px solid #bbb {
-    bottom: 1px solid #999;
-}
-@include single-box-shadow;
-}
-#player command {
-  float:left;
-  background: url("/controls.png") no-repeat 0 0;
-  height:61px;
-  width:47px;
-  cursor: pointer;
-  &#play {width:57px; background-position:-47px 0;}
-  &#next {background-position:-104px 0;}
-}
-#player details {
-  float:right;
-  width: 50%;
-  border: 1px solid #666;
-  @include border-radius(4px, 4px);
-  @include background-image(linear-gradient(#e0f7e2 45%,#d9f0db 55%));
   @include single-box-shadow;
-  position: relative;
-  height: 40px;
-  margin: 10px;
-  font-size: 10px;
-  dt, dd {
-    position: absolute;
-    width: 33%;
-    top: 5px;
-    text-indent: 5px;
-    @include ellipsis;
-}
-dd {
-  top: 20px;
-}
-@for $i from 1 through 4 {
-  dt:nth-of-type(#{$i}), dd:nth-of-type(#{$i}){
-    left: ( $i - 1 ) * 33.3%;
-  }
-}
-}
+  border: 1px solid #bbb {
+    bottom: 1px solid #999;}
+  #controls {
+    height: 61px;}
+  button {
+    float:left;
+    border: 0;
+    background: url("/controls.png") no-repeat 0 0;
+    height:61px;
+    width:47px;
+    cursor: pointer;
+    &#play {width:57px; background-position:-47px 0;}
+    &#next {background-position:-104px 0;}}
+  #details {
+    border: 1px solid #666;
+    @include border-radius(4px, 4px);
+    @include background-image(linear-gradient(#e0f7e2 45%,#d9f0db 55%));
+    @include single-box-shadow;
+    position: relative;
+    height: 40px;
+    margin: 10px;
+    font-size: 10px;
+    dt, dd {
+      position: absolute;
+      width: 33%;
+      top: 5px;
+      text-indent: 5px;
+      @include ellipsis;}
+    dd {
+      top: 20px;}
+    @for $i from 1 through 4 {
+      dt:nth-of-type(#{$i}), dd:nth-of-type(#{$i}){
+        left: ( $i - 1 ) * 33.3%;}}}}
 
 
 //#player li.shuffle a {width:49px; background: url("../images/shuffel.png") no-repeat 0 0;}
 
 
-header {
+nav {
+  height: 30px;
   ul li {
     float: left;
 }
@@ -80,7 +74,7 @@ ul, ol {
 }
 section {
   position: absolute;
-  top: 100px;
+  top: 170px;
   bottom: 0px;
   width: 100%;
   @include transition(all 1.0s ease-in-out);

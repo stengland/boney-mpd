@@ -22,29 +22,27 @@
   </head>
 
   <body>
-    <header>
-    <menu id="player">
-      <command id="prev" data-action="previous" />
-      <command id="play" data-action="play" />
-      <command id="next" data-action="next" />
-      <details open="true">
-        <dl>
-          <dt>Track</dt>
-          <dd class="track">-</dd>
-          <dt>Artist</dt>
-          <dd class="artist">-</dd>
-          <dt>Album</dt>
-          <dd class="album">-</dd>
-        </dl>
-      </details>
-    </menu>
+    <header id="player">
+      <div id="controls">
+      <button id="prev" data-action="previous" />
+      <button id="play" data-action="play" />
+      <button id="next" data-action="next" />
+      </div>
+      <dl id="details">
+        <dt>Track</dt>
+        <dd class="track">-</dd>
+        <dt>Artist</dt>
+        <dd class="artist">-</dd>
+        <dt>Album</dt>
+        <dd class="album">-</dd>
+      </dl>
+    </header>
     <nav>
     <ul>
       <li><a href="#playlist">Playlist</a></li>
       <li><a href="#search">Search</a></li>
     </ul>
     </nav>
-    </header>
     <section id="playlist">
     <h2>Playlist</h2>
     </section>
