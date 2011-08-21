@@ -16,20 +16,43 @@ class MeatBox < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
 
-  class PlayerState
+  class PlayerStatus
     class << self
-      attr_accessor :sockets
+
+      def <<(soc)
+        @sockets ||= []
+        @sockets << soc
+        puts "WELCOME #{soc.inspect}"
+        # Send the current song
+        soc.send_message( 'Welcome'.to_json )
+        soc.send_message( [ 'current_song', @current_song ].to_json )
+      end
+
+      def delete(soc)
+        @sockets.delete(soc)
+      end
 
       def current_song(song)
+        @current_song = song
         send_message('current_song', song)
+      end
+
+      def state(s)
+        @state = s
+        send_message('state', s)
+      end
+
+      def playlist(count)
+        @playlist_count = count
+        send_message('playlist_count', count)
       end
 
       def send_message(*data)
         puts "CALLBACK: #{data.inspect}"
         @sockets.each do |soc|
-          puts "MESSAGE #{soc}"
+          puts "MESSAGE #{soc.inspect}"
           soc.send_message data.to_json
-        end
+        end if @sockets
       end
     end
   end
@@ -42,13 +65,13 @@ class MeatBox < Sinatra::Base
 
     set :scss, Compass.sass_engine_options
 
-    PlayerState.sockets = []
-
     begin
       @@mpd = Mopidy.new 'localhost', 6600
       @@mpd.connect(true)
 
-      @@mpd.register_callback( PlayerState.method('current_song'), MPD::CURRENT_SONG_CALLBACK )
+      @@mpd.register_callback( PlayerStatus.method('current_song'), MPD::CURRENT_SONG_CALLBACK )
+      @@mpd.register_callback( PlayerStatus.method('state'), MPD::STATE_CALLBACK )
+      @@mpd.register_callback( PlayerStatus.method('playlist'), MPD::PLAYLIST_CALLBACK )
     rescue Errno::ECONNREFUSED => e
       puts "Could not connect to Mopidy: #{e}"
       exit
@@ -114,11 +137,14 @@ class MeatBox < Sinatra::Base
       request.websocket!(
         :protocol => "Meatbox Message Push",
         :on_start => proc do |websocket|
-          puts "OPEN sock"
-          PlayerState.sockets << websocket
+          # Add to the PlayerStatus sockets collection
+          websocket.on_handshake do |websocket|
+            puts "OPEN sock"
+            PlayerStatus << websocket
+          end
           websocket.on_close do |websocket|
             puts "CLOSE sock"
-            PlayerState.sockets.delete( websocket )
+            PlayerStatus.delete( websocket )
           end
         end)
     else
