@@ -56,9 +56,9 @@ class TrackView extends Backbone.View
     'click .artist' : 'showArtist'
     'click .album' : 'showAlbum'
   showArtist: ->
-    window.location.hash = "artist/#{@model.get('artist')}"
+    playerRouter.navigate( "artist/#{@model.get('artist')}" , true )
   showAlbum: ->
-    window.location.hash = "album/#{@model.get('album')}"
+    playerRouter.navigate( "album/#{@model.get('album')}" , true )
   playListAction: =>
     if @model.get('pos')
       @model.destroy()
@@ -69,7 +69,6 @@ class TrackView extends Backbone.View
     $(@el).html(@template(track: @model))
     this
 
-playlist = new Playlist
 class PlaylistView extends Backbone.View
   initialize: ->
     @tracklistView = new TracklistView({ collection: playlist })
@@ -101,7 +100,6 @@ class AlbumView extends Backbone.View
     $(@el).append(tracklistView.render().el)
     this
 
-search = new Search
 class SearchView extends Backbone.View
   initialize: ->
     @tracklistView = new TracklistView({ collection: search })
@@ -109,13 +107,13 @@ class SearchView extends Backbone.View
   events:
     "change #query":          "search"
   search: ->
-    window.location.hash = "search/any/#{$('#query').val()}"
+    playerRouter.navigate( "search/any/#{$('#query').val()}" , true )
   render: =>
     $(@el).append(@tracklistView.render().el)
     toggleSection(@el)
     this
 
-class PlayerController extends Backbone.Controller
+class PlayerRouter extends Backbone.Router
   routes:
     'playlist'            : 'playlist'
     'search'              : 'search'
@@ -149,9 +147,12 @@ class PlayerController extends Backbone.Controller
     })
 
 
+search = new Search
+playlist = new Playlist
 playlistView = null
 searchView = null
 browserView = null
+playerRouter = null
 toggleSection = (section) ->
   $('section.active').removeClass('active')
   $(section).addClass('active')
@@ -161,12 +162,12 @@ $ ->
   playlistView = new PlaylistView({ el: $('#playlist') })
   searchView = new SearchView({ el: $('#search') })
   browserView = new BrowserView({ el: $('#browser')})
-  new PlayerController()
+  playerRouter = new PlayerRouter()
   connection = new WebSocket('ws://localhost:9292/messages')
   # When the connection is open, send some data to the server
   #connection.onopen = () ->
     #connection.send('Ping'); # Send the message 'Ping' to the server
-  # Log errors`
+  # Log errors
   connection.onerror = (error) ->
     console.log('WebSocket Error ' + error)
   # Log messages from the server
