@@ -1,3 +1,4 @@
 cache/*
 config.yml
 log/*.log
+.sass-cache
