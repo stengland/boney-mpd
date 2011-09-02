@@ -8,3 +8,4 @@ gem "coffee-script"
 gem "therubyracer"
 gem "compass"
 gem "skinny"
+gem 'foreman'
