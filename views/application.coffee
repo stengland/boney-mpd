@@ -163,19 +163,18 @@ $ ->
   searchView = new SearchView({ el: $('#search') })
   browserView = new BrowserView({ el: $('#browser')})
   playerRouter = new PlayerRouter()
-  connection = new WebSocket('ws://localhost:9292/messages')
-  # When the connection is open, send some data to the server
-  #connection.onopen = () ->
-    #connection.send('Ping'); # Send the message 'Ping' to the server
-  # Log errors
-  connection.onerror = (error) ->
-    console.log('WebSocket Error ' + error)
+  client = new Faye.Client('/faye');
   # Log messages from the server
-  connection.onmessage = (e) ->
-    console.log('Server: ' + e.data)
-    parsed_data = eval(e.data)
-    playerView[parsed_data[0]] = parsed_data[1]
+  subscription = client.subscribe '/playerstate', (e) ->
+    console.log 'Server: ' + e
+    playerView[e[0]] = e[1]
     playerView.render()
+
+  subscription.callback ->
+    console.log 'Subscription is now active!'
+
+  subscription.errback (error) ->
+    console.log error.message
 
   Backbone.history.start()
 

@@ -1,2 +1,2 @@
 mopidy: mopidy
-server: rackup -s thin
+server: rackup -s thin -E production

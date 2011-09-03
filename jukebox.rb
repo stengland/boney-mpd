@@ -8,29 +8,25 @@ class Mopidy < MPD
   end
 end
 
-class Sinatra::Request
-  include Skinny::Helpers
-end
-
 class MeatBox < Sinatra::Base
   set :root, File.dirname(__FILE__)
   set :static, true
 
+  use Faye::RackAdapter, :mount      => '/faye'
+
   class PlayerStatus
+    @@env = nil
+
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      @@env = env
+      @app.call(env)
+    end
+
     class << self
-
-      def <<(soc)
-        @sockets ||= []
-        @sockets << soc
-        puts "WELCOME #{soc.inspect}"
-        # Send the current song
-        soc.send_message( 'Welcome'.to_json )
-        soc.send_message( [ 'current_song', @current_song ].to_json )
-      end
-
-      def delete(soc)
-        @sockets.delete(soc)
-      end
 
       def current_song(song)
         @current_song = song
@@ -49,19 +45,18 @@ class MeatBox < Sinatra::Base
 
       def send_message(*data)
         puts "CALLBACK: #{data.inspect}"
-        @sockets.each do |soc|
-          puts "MESSAGE #{soc.inspect}"
-          soc.send_message data.to_json
-        end if @sockets
+        @@env['faye.client'].publish('/playerstate', data) unless @@env.nil?
       end
     end
   end
+  use PlayerStatus
 
   configure do
     Compass.configuration do |config|
       config.project_path = File.dirname(__FILE__)
       config.sass_dir = 'views'
     end
+
 
     set :scss, Compass.sass_engine_options
 
@@ -130,26 +125,6 @@ class MeatBox < Sinatra::Base
 
   delete '/playlist/:id' do
     @@mpd.deleteid(%{"#{ params[:id] }"})
-  end
-
-  get '/messages' do
-    if request.websocket?
-      request.websocket!(
-        :protocol => "Meatbox Message Push",
-        :on_start => proc do |websocket|
-          # Add to the PlayerStatus sockets collection
-          websocket.on_handshake do |websocket|
-            puts "OPEN sock"
-            PlayerStatus << websocket
-          end
-          websocket.on_close do |websocket|
-            puts "CLOSE sock"
-            PlayerStatus.delete( websocket )
-          end
-        end)
-    else
-      ['Nothing to see here']
-    end
   end
 
 end
