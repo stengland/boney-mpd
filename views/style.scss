@@ -13,7 +13,9 @@ header {
   border: 1px solid #bbb {
     bottom: 1px solid #999;}
   #controls {
-    height: 61px;}
+    height: 61px;
+    width: 155px;
+    margin: 0 auto;}
   button {
     float:left;
     border: 0;
@@ -46,43 +48,58 @@ header {
 
 
 //#player li.shuffle a {width:49px; background: url("../images/shuffel.png") no-repeat 0 0;}
-
+@mixin button-hover {
+  text-shadow: 0 1px 0 #eee;
+  color:#000;
+  background-color:#FFF;
+  line-height:30px;
+  border-bottom: 1px solid #ccc;
+  cursor:pointer;
+  &:hover {
+    color:#FFFFFF;
+    @include background-image(linear-gradient(#eee,#ccc));}}
 
 nav {
   height: 30px;
   ul li {
-    float: left;
-}
-}
-ul, ol {
-  @include border-radius(4px, 4px);
-  overflow: hidden;
-  li {
-    @include ellipsis;
-    text-shadow: 0 1px 0 #eee;
-    color:#000;
-    background-color:#FFF;
-    line-height:30px;
-    border-bottom: 1px solid #ccc;
-    padding-left:10px;
-    cursor:pointer;
-    &:hover {
-      color:#FFFFFF;
-      @include background-image(linear-gradient(#eee,#ccc));
-}
-}
+    display: inline;}
+  a {
+    @include button-hover;
+    width: 33.3333%;
+    text-align: center;
+    float: left;}
 }
 section {
-  position: absolute;
-  top: 170px;
-  bottom: 0px;
-  width: 100%;
+  //position: absolute;
+  //top: 160px;
+  //bottom: 0;
+  //width: 100%;
+  //overflow-y: scroll;
+  //-webkit-overflow-scrolling: touch;
   @include transition(all 1.0s ease-in-out);
   opacity: 0;
-  overflow: auto;
+  display: none;
 
   &:target, &:active, &.active {
     opacity: 1;
-    z-index: 1;
-}
+    display:block;
+    z-index: 1;}
+
+  h2 {
+    padding: 10px}
+  ul, ol {
+    @include border-radius(9px, 9px);
+    margin: 0 10px 10px;
+    overflow: hidden;
+    li {
+      padding-left:10px;
+      @include ellipsis;
+      @include button-hover;
+      span {
+        display: inline-block;
+        @include ellipsis;
+        width: 33.333%}}}
+  .album {
+    h2 {
+      cursor: pointer }}
 }

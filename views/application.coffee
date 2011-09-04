@@ -81,7 +81,7 @@ class PlaylistView extends Backbone.View
 class BrowserView extends Backbone.View
   render: =>
     $(@el).html('')
-    $(@el).append(@content.render().el)
+    $(@el).append(@content.render().el) if @content
     toggleSection(@el)
     this
 
@@ -119,6 +119,7 @@ class PlayerRouter extends Backbone.Router
     'search'              : 'search'
     'search/:type/:query' : 'search'
     'album/:title'        : 'album'
+    'browser'             : 'browser'
 
   playlist: ->
     playlist.fetch({
@@ -127,7 +128,7 @@ class PlayerRouter extends Backbone.Router
     })
 
   search: (type, query) ->
-    if type
+    if type and query
       search.type = type
       search.query = query
       search.fetch({
@@ -146,6 +147,9 @@ class PlayerRouter extends Backbone.Router
         browserView.render()
     })
 
+  browser: ->
+    browserView.render()
+
 
 search = new Search
 playlist = new Playlist
@@ -163,7 +167,7 @@ $ ->
   searchView = new SearchView({ el: $('#search') })
   browserView = new BrowserView({ el: $('#browser')})
   playerRouter = new PlayerRouter()
-  client = new Faye.Client('/faye');
+  client = new Faye.Client('/faye')
   # Log messages from the server
   subscription = client.subscribe '/playerstate', (e) ->
     console.log 'Server: ' + e
@@ -175,6 +179,8 @@ $ ->
 
   subscription.errback (error) ->
     console.log error.message
+
+  $('section').addClass('scrollable vertical')
 
   Backbone.history.start()
 

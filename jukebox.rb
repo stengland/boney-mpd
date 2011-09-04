@@ -27,7 +27,6 @@ class MeatBox < Sinatra::Base
     end
 
     class << self
-
       def current_song(song)
         @current_song = song
         send_message('current_song', song)
